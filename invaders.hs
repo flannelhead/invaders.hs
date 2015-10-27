@@ -1,4 +1,7 @@
+import System.IO
 import System.Console.ANSI
+import Control.Concurrent
+import Control.Monad
 
 -- Generic Space Invaders model
 data World = World { cannon :: Cannon
@@ -43,6 +46,8 @@ cannonImage = [ "\\"
               , "/" ]
 cannonColor = White
 
+mainDelayUs = 50000
+
 drawCannon :: Cannon -> IO ()
 drawCannon (Cannon (x, y)) = do
     setCursorPosition (y - 2) x
@@ -54,9 +59,11 @@ drawCannon (Cannon (x, y)) = do
             cursorDownLine 1
             setCursorColumn x
 
-main = do
+main = forever $ do
     clearScreen
-    drawCannon (cannon initialWorld)
+    drawCannon $ cannon initialWorld
+    hFlush stdout
+    threadDelay mainDelayUs
 
 -- Auxiliary functions for drawing
 
